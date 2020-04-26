@@ -3,6 +3,7 @@ package gradexpath
 import (
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	"github.com/timdrysdale/copy"
@@ -58,4 +59,69 @@ func EnsureDirAll(dirName string) error {
 	} else {
 		return err
 	}
+}
+
+func GetFileList(dir string) ([]string, error) {
+
+	paths := []string{}
+
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			paths = append(paths, path)
+		}
+
+		return nil
+	})
+
+	return paths, err
+
+}
+
+func CopyIsComplete(source, dest []string) bool {
+
+	sourceBase := BaseList(source)
+	destBase := BaseList(dest)
+
+	for _, item := range sourceBase {
+
+		if !itemExists(destBase, item) {
+			return false
+		}
+	}
+
+	return true
+
+}
+
+func BaseList(paths []string) []string {
+
+	bases := []string{}
+
+	for _, path := range paths {
+		bases = append(bases, filepath.Base(path))
+	}
+
+	return bases
+}
+
+// Mod from array to slice,
+// from https://www.golangprograms.com/golang-check-if-array-element-exists.html
+func itemExists(sliceType interface{}, item interface{}) bool {
+	slice := reflect.ValueOf(sliceType)
+
+	if slice.Kind() != reflect.Slice {
+		panic("Invalid data-type")
+	}
+
+	for i := 0; i < slice.Len(); i++ {
+		if slice.Index(i).Interface() == item {
+			return true
+		}
+	}
+
+	return false
 }

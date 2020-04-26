@@ -149,7 +149,7 @@ func SetupExamPaths(exam string) error {
 
 // if the source file is not newer, it's not an error
 // we just won't move it - anything left we deal with later
-func MoveIfNewerThanDestination(source, destination string) error {
+func MoveIfNewerThanDestination(source, destinationDir string) error {
 
 	//check both exist
 	sourceInfo, err := os.Stat(source)
@@ -157,6 +157,8 @@ func MoveIfNewerThanDestination(source, destination string) error {
 	if err != nil {
 		return err
 	}
+
+	destination := filepath.Join(destinationDir, filepath.Base(source))
 
 	destinationInfo, err := os.Stat(destination)
 
