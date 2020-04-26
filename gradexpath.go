@@ -22,6 +22,7 @@ var (
 		"19-temp-ignore",
 		"20-complete-paper-set",
 		"21-complete-receipt-set",
+		"22-anonymous-paper-set",
 		"40-ready-to-mark",
 		"42-already-sent-to-marker",
 		"50-from-marker",
@@ -35,6 +36,18 @@ var (
 		"99-reports",
 	}
 )
+
+func AcceptedPapers(exam string) string {
+	return filepath.Join(Root(), exam, "20-complete-paper-set")
+}
+
+func AcceptedReceipts(exam string) string {
+	return filepath.Join(Root(), exam, "21-complete-receipt-set")
+}
+
+func AnonymousPapers(exam string) string {
+	return filepath.Join(Root(), exam, "22-anonymous-paper-set")
+}
 
 func Ingest() string {
 	return filepath.Join(Root(), "ingest")
@@ -149,7 +162,35 @@ func SetupExamPaths(exam string) error {
 
 // if the source file is not newer, it's not an error
 // we just won't move it - anything left we deal with later
-func MoveIfNewerThanDestination(source, destinationDir string) error {
+func MoveIfNewerThanDestination(source, destination string) error {
+
+	//check both exist
+	sourceInfo, err := os.Stat(source)
+
+	if err != nil {
+		return err
+	}
+
+	destinationInfo, err := os.Stat(destination)
+
+	// source newer by definition if destination does not exist
+	if os.IsNotExist(err) {
+		err = os.Rename(source, destination)
+		return err
+	}
+	if err != nil {
+		return err
+	}
+	if sourceInfo.ModTime().After(destinationInfo.ModTime()) {
+		err = os.Rename(source, destination)
+		return err
+	}
+
+	return nil
+
+}
+
+func MoveIfNewerThanDestinationInDir(source, destinationDir string) error {
 
 	//check both exist
 	sourceInfo, err := os.Stat(source)
@@ -167,7 +208,9 @@ func MoveIfNewerThanDestination(source, destinationDir string) error {
 		err = os.Rename(source, destination)
 		return err
 	}
-
+	if err != nil {
+		return err
+	}
 	if sourceInfo.ModTime().After(destinationInfo.ModTime()) {
 		err = os.Rename(source, destination)
 		return err

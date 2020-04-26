@@ -35,6 +35,10 @@ func Copy(source, destination string) error {
 
 }
 
+func BareFile(name string) string {
+	return strings.TrimSuffix(filepath.Base(name), filepath.Ext(name))
+}
+
 func EnsureDir(dirName string) error {
 
 	err := os.Mkdir(dirName, 0755) //probably umasked with 22 not 02
@@ -88,7 +92,7 @@ func CopyIsComplete(source, dest []string) bool {
 
 	for _, item := range sourceBase {
 
-		if !itemExists(destBase, item) {
+		if !ItemExists(destBase, item) {
 			return false
 		}
 	}
@@ -110,7 +114,7 @@ func BaseList(paths []string) []string {
 
 // Mod from array to slice,
 // from https://www.golangprograms.com/golang-check-if-array-element-exists.html
-func itemExists(sliceType interface{}, item interface{}) bool {
+func ItemExists(sliceType interface{}, item interface{}) bool {
 	slice := reflect.ValueOf(sliceType)
 
 	if slice.Kind() != reflect.Slice {

@@ -32,3 +32,10 @@ func TestIsPdf(t *testing.T) {
 	assert.True(t, IsPdf("bar.foo.pDF"))
 	assert.False(t, IsPdf("bar.PDF.foo"))
 }
+
+func TestBareFile(t *testing.T) {
+
+	assert.Equal(t, BareFile("./test/some/foo.pdf"), "foo")
+	assert.Equal(t, BareFile("./test/some.foo.pdf"), "some.foo")
+
+}
