@@ -10,8 +10,8 @@ var (
 	testroot  = "./tmp-delete-me"
 	ExamStage = []string{
 		"00-config",
-		"10-temp-receipt",
-		"11-temp-pdf",
+		"10-temp-pdf",
+		"11-temp-txt",
 		"12-temp-annotate",
 		"13-temp-reject",
 		"14-temp-paper",
@@ -20,9 +20,8 @@ var (
 		"17-temp-check",
 		"18-temp-config",
 		"19-temp-ignore",
-		"20-partial-paper-set",
-		"21-patch-set",
-		"22-complete-paper-set",
+		"20-complete-paper-set",
+		"21-complete-receipt-set",
 		"40-ready-to-mark",
 		"42-already-sent-to-marker",
 		"50-from-marker",
