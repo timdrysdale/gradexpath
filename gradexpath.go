@@ -40,6 +40,14 @@ func Ingest() string {
 	return filepath.Join(Root(), "ingest")
 }
 
+func TempPdf() string {
+	return filepath.Join(Root(), "temp-pdf")
+}
+
+func TempTxt() string {
+	return filepath.Join(Root(), "temp-txt")
+}
+
 func Export() string {
 	return filepath.Join(Root(), "export")
 }
@@ -95,42 +103,18 @@ func GetExamStagePath(name, stage string) string {
 	return filepath.Join(Exam(), name, stage)
 }
 
-func EnsureDir(dirName string) error {
-
-	err := os.Mkdir(dirName, 0755) //probably umasked with 22 not 02
-
-	os.Chmod(dirName, 0755)
-
-	if err == nil || os.IsExist(err) {
-		return nil
-	} else {
-		return err
-	}
-}
-
-func EnsureDirAll(dirName string) error {
-
-	err := os.MkdirAll(dirName, 0755) //probably umasked with 22 not 02
-
-	os.Chmod(dirName, 0755)
-
-	if err == nil || os.IsExist(err) {
-		return nil
-	} else {
-		return err
-	}
-}
-
 func SetupGradexPaths() error {
 
 	paths := []string{
 		Root(),
 		Ingest(),
 		Export(),
-		Etc(),
 		Var(),
 		Usr(),
 		Exam(),
+		TempPdf(),
+		TempTxt(),
+		Etc(),
 		IngestConf(),
 		OverlayConf(),
 		ExtractConf(),
