@@ -10,10 +10,11 @@ var (
 	testroot  = "./tmp-delete-me"
 	ExamStage = []string{
 		"00-config",
-		"10-temp-holding",
-		"11-temp-paper",
-		"12-temp-patch",
+		"10-temp-receipt",
+		"11-temp-pdf",
+		"12-temp-annotate",
 		"13-temp-reject",
+		"14-temp-paper",
 		"15-temp-mark",
 		"16-temp-moderate",
 		"17-temp-check",
@@ -76,7 +77,7 @@ func SetupConf() string {
 	return filepath.Join(Etc(), "setup")
 }
 
-func setTesting() {
+func SetTesting() { //need this when testing other tools
 	isTesting = true
 }
 
