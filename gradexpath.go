@@ -163,3 +163,31 @@ func SetupExamPaths(exam string) error {
 	}
 	return nil
 }
+
+// if the source file is not newer, it's not an error
+// we just won't move it - anything left we deal with later
+func MoveIfNewerThanDestination(source, destination string) error {
+
+	//check both exist
+	sourceInfo, err := os.Stat(source)
+
+	if err != nil {
+		return err
+	}
+
+	destinationInfo, err := os.Stat(destination)
+
+	// source newer by definition if destination does not exist
+	if os.IsNotExist(err) {
+		err = os.Rename(source, destination)
+		return err
+	}
+
+	if sourceInfo.ModTime().After(destinationInfo.ModTime()) {
+		err = os.Rename(source, destination)
+		return err
+	}
+
+	return nil
+
+}
