@@ -1,28 +1,22 @@
 package gradexpath
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 var (
 	isTesting bool
 	testroot  = "./tmp-delete-me"
 	ExamStage = []string{
-		"00-config",
-		"10-temp-pdf",
-		"11-temp-txt",
-		"12-temp-annotate",
-		"13-temp-reject",
-		"14-temp-paper",
-		"15-temp-mark",
-		"16-temp-moderate",
-		"17-temp-check",
-		"18-temp-config",
-		"19-temp-ignore",
-		"20-complete-paper-set",
-		"21-complete-receipt-set",
-		"22-anonymous-paper-set",
+		config,
+		acceptedPapers,
+		acceptedReceipts,
+		tempImages,
+		tempPages,
+		anonPapers,
 		"40-ready-to-mark",
 		"42-already-sent-to-marker",
 		"50-from-marker",
@@ -37,22 +31,89 @@ var (
 	}
 )
 
+const (
+	Checker1 = "-c1"
+	Checker2 = "-c2"
+	Checker3 = "-c3"
+	Checker4 = "-c4"
+	Checker5 = "-c5"
+
+	Done = "d"
+
+	Marker1 = "-ma1"
+	Marker2 = "-ma2"
+	Marker3 = "-ma3"
+	Marker4 = "-ma4"
+	Marker5 = "-ma5"
+
+	Moderator1 = "-mo1"
+	Moderator2 = "-mo2"
+	Moderator3 = "-mo3"
+	Moderator4 = "-mo4"
+	Moderator5 = "-mo5"
+
+	config           = "00-config"
+	acceptedReceipts = "02-accepted-receipts"
+	acceptedPapers   = "03-accepted-papers"
+	tempImages       = "03-temporary-images"
+	tempPages        = "04-temporary-pages"
+	anonPapers       = "05-anonymous-papers"
+)
+
+func FlattenLayoutSVG() string {
+	return filepath.Join(IngestTemplate(), "layout-flatten-312pt.svg")
+}
+
+func OverlayLayoutSVG() string {
+	return filepath.Join(OverlayTemplate(), "layout.svg")
+}
+
 func AcceptedPapers(exam string) string {
-	return filepath.Join(Root(), exam, "20-complete-paper-set")
+	return filepath.Join(Exam(), exam, acceptedPapers)
 }
 
 func AcceptedReceipts(exam string) string {
-	return filepath.Join(Root(), exam, "21-complete-receipt-set")
+	return filepath.Join(Exam(), exam, acceptedReceipts)
+}
+
+//TODO in flatten, swap these paths for the general named ones below
+func AcceptedPaperImages(exam string) string {
+	return filepath.Join(Exam(), exam, tempImages)
+}
+func AcceptedPaperPages(exam string) string {
+	return filepath.Join(Exam(), exam, tempPages)
+}
+func PaperImages(exam string) string {
+	return filepath.Join(Exam(), exam, tempImages)
+}
+func PaperPages(exam string) string {
+	return filepath.Join(Exam(), exam, tempPages)
 }
 
 func AnonymousPapers(exam string) string {
-	return filepath.Join(Root(), exam, "22-anonymous-paper-set")
+	return filepath.Join(Exam(), exam, anonPapers)
+}
+
+func Identity() string {
+	return filepath.Join(Etc(), "identity")
+}
+
+func IdentityCSV() string {
+	return filepath.Join(Identity(), "identity.csv")
 }
 
 func Ingest() string {
 	return filepath.Join(Root(), "ingest")
 }
 
+func IngestTemplate() string {
+	return filepath.Join(IngestConf(), "template")
+}
+
+func OverlayTemplate() string {
+	return filepath.Join(OverlayConf(), "template")
+
+}
 func TempPdf() string {
 	return filepath.Join(Root(), "temp-pdf")
 }
@@ -121,6 +182,7 @@ func SetupGradexPaths() error {
 	paths := []string{
 		Root(),
 		Ingest(),
+		Identity(),
 		Export(),
 		Var(),
 		Usr(),
@@ -130,6 +192,8 @@ func SetupGradexPaths() error {
 		Etc(),
 		IngestConf(),
 		OverlayConf(),
+		IngestTemplate(),
+		OverlayTemplate(),
 		ExtractConf(),
 		SetupConf(),
 	}
@@ -218,4 +282,22 @@ func MoveIfNewerThanDestinationInDir(source, destinationDir string) error {
 
 	return nil
 
+}
+
+func ExamDiet(exam string) string {
+
+	m := int(time.Now().Month())
+
+	switch {
+	case m > 4 && m < 6:
+		return fmt.Sprintf("May-%d", time.Now().Year())
+	case m > 6 && m < 10:
+		return fmt.Sprintf("Aug-%d", time.Now().Year())
+	case m > 10 || m < 3:
+		return fmt.Sprintf("Dec-%d", time.Now().Year())
+	default:
+		return fmt.Sprintf("%d", time.Now().Year())
+	}
+
+	return ""
 }

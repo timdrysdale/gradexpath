@@ -129,3 +129,8 @@ func ItemExists(sliceType interface{}, item interface{}) bool {
 
 	return false
 }
+
+func GetAnonymousFileName(course, anonymousIdentity string) string {
+
+	return course + "-" + anonymousIdentity + ".pdf"
+}
