@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -17,6 +18,13 @@ var (
 		tempImages,
 		tempPages,
 		anonPapers,
+		markerReady,
+		markerSent,
+		markerBack,
+		moderatorReady,
+		moderatorSent,
+		moderatorBack,
+
 		"40-ready-to-mark",
 		"42-already-sent-to-marker",
 		"50-from-marker",
@@ -32,33 +40,122 @@ var (
 )
 
 const (
-	Checker1 = "-c1"
-	Checker2 = "-c2"
-	Checker3 = "-c3"
-	Checker4 = "-c4"
-	Checker5 = "-c5"
-
-	Done = "d"
-
-	Marker1 = "-ma1"
-	Marker2 = "-ma2"
-	Marker3 = "-ma3"
-	Marker4 = "-ma4"
-	Marker5 = "-ma5"
-
-	Moderator1 = "-mo1"
-	Moderator2 = "-mo2"
-	Moderator3 = "-mo3"
-	Moderator4 = "-mo4"
-	Moderator5 = "-mo5"
-
 	config           = "00-config"
 	acceptedReceipts = "02-accepted-receipts"
 	acceptedPapers   = "03-accepted-papers"
 	tempImages       = "03-temporary-images"
 	tempPages        = "04-temporary-pages"
 	anonPapers       = "05-anonymous-papers"
+	markerReady      = "20-marker-ready"
+	markerSent       = "21-marker-sent"
+	markerBack       = "22-marker-back"
+	moderatorReady   = "30-moderator-ready"
+	moderatorSent    = "31-moderator-sent"
+	moderatorBack    = "32-moderator-back"
+	checkerReady     = "30-checker-ready"
+	checkerSent      = "31-checker-sent"
+	checkerBack      = "32-checker-back"
+
+	N = 3
 )
+
+// Path is in the package name, so anything without another noun IS a path
+// non path things need a noun
+
+func limit(initials string, N int) string {
+	if len(initials) < 3 {
+		N = len(initials)
+	}
+	return strings.ToUpper(initials[0:N])
+}
+
+func DoneDecoration() string {
+	return "d"
+}
+
+func MarkerABCDecoration(initials string) string {
+	return fmt.Sprintf("-ma%s", limit(initials, N))
+}
+
+func MarkerABCDirName(initials string) string {
+	return limit(initials, N)
+}
+
+func ModeratorABCDecoration(initials string) string {
+	return fmt.Sprintf("-mo%s", limit(initials, N))
+}
+
+func ModeratorABCDirName(initials string) string {
+	return limit(initials, N)
+}
+
+func CheckerABCDecoration(initials string) string {
+	return fmt.Sprintf("-c%s", limit(initials, N))
+}
+
+func CheckerABCDirName(initials string) string {
+	return limit(initials, N)
+}
+
+func MarkerNDecoration(number int) string {
+	return fmt.Sprintf("-ma%d", number)
+}
+
+func MarkerNDirName(number int) string {
+	return fmt.Sprintf("marker%d", number)
+}
+
+func ModeratorNDecoration(number int) string {
+	return fmt.Sprintf("-mo%d", number)
+}
+
+func ModeratorNDirName(number int) string {
+	return fmt.Sprintf("moderator%d", number)
+}
+
+func CheckerNDecoration(number int) string {
+	return fmt.Sprintf("-c%d", number)
+}
+
+func CheckerNDirName(number int) string {
+	return fmt.Sprintf("checker%d", number)
+}
+
+func MarkerReady(exam, marker string) string {
+	return filepath.Join(Exam(), exam, markerReady, marker)
+}
+
+func MarkerSent(exam, marker string) string {
+	return filepath.Join(Exam(), exam, markerSent, marker)
+}
+
+func MarkerBack(exam, marker string) string {
+	return filepath.Join(Exam(), exam, markerBack, marker)
+}
+
+func ModeratorReady(exam, moderator string) string {
+	return filepath.Join(Exam(), exam, moderatorReady, moderator)
+}
+
+func ModeratorSent(exam, moderator string) string {
+	return filepath.Join(Exam(), exam, moderatorSent, moderator)
+}
+
+func ModeratorBack(exam, moderator string) string {
+	return filepath.Join(Exam(), exam, moderatorBack, moderator)
+}
+
+func CheckerReady(exam, checker string) string {
+	return filepath.Join(Exam(), exam, checkerReady, checker)
+}
+
+func CheckerSent(exam, checker string) string {
+	return filepath.Join(Exam(), exam, checkerSent, checker)
+}
+
+func CheckerBack(exam, checker string) string {
+	return filepath.Join(Exam(), exam, checkerBack, checker)
+}
 
 func FlattenLayoutSVG() string {
 	return filepath.Join(IngestTemplate(), "layout-flatten-312pt.svg")
