@@ -40,21 +40,24 @@ var (
 )
 
 const (
-	config           = "00-config"
-	acceptedReceipts = "02-accepted-receipts"
-	acceptedPapers   = "03-accepted-papers"
-	tempImages       = "03-temporary-images"
-	tempPages        = "04-temporary-pages"
-	anonPapers       = "05-anonymous-papers"
-	markerReady      = "20-marker-ready"
-	markerSent       = "21-marker-sent"
-	markerBack       = "22-marker-back"
-	moderatorReady   = "30-moderator-ready"
-	moderatorSent    = "31-moderator-sent"
-	moderatorBack    = "32-moderator-back"
-	checkerReady     = "30-checker-ready"
-	checkerSent      = "31-checker-sent"
-	checkerBack      = "32-checker-back"
+	config                = "00-config"
+	acceptedReceipts      = "02-accepted-receipts"
+	acceptedPapers        = "03-accepted-papers"
+	tempImages            = "03-temporary-images"
+	tempPages             = "04-temporary-pages"
+	anonPapers            = "05-anonymous-papers"
+	markerReady           = "20-marker-ready"
+	markerSent            = "21-marker-sent"
+	markerBack            = "22-marker-back"
+	moderateActive        = "30-moderate-active"
+	moderatorReady        = "31-moderator-ready"
+	moderatorSent         = "32-moderator-sent"
+	moderatorBack         = "33-moderator-back"
+	moderateInActiveReady = "34-moderate-inactive-ready"
+	moderateInActiveBack  = "35-moderate-inactive-back"
+	checkerReady          = "40-checker-ready"
+	checkerSent           = "41-checker-sent"
+	checkerBack           = "42-checker-back"
 
 	N = 3
 )
@@ -74,87 +77,129 @@ func DoneDecoration() string {
 }
 
 func MarkerABCDecoration(initials string) string {
-	return fmt.Sprintf("-ma%s", limit(initials, N))
+	path := fmt.Sprintf("-ma%s", limit(initials, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func MarkerABCDirName(initials string) string {
-	return limit(initials, N)
+	path := limit(initials, N)
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorABCDecoration(initials string) string {
-	return fmt.Sprintf("-mo%s", limit(initials, N))
+	path := fmt.Sprintf("-mo%s", limit(initials, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorABCDirName(initials string) string {
-	return limit(initials, N)
+	path := limit(initials, N)
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerABCDecoration(initials string) string {
-	return fmt.Sprintf("-c%s", limit(initials, N))
+	path := fmt.Sprintf("-c%s", limit(initials, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerABCDirName(initials string) string {
-	return limit(initials, N)
+	path := limit(initials, N)
+	EnsureDirAll(path)
+	return path
 }
 
 func MarkerNDecoration(number int) string {
-	return fmt.Sprintf("-ma%d", number)
+	path := fmt.Sprintf("-ma%d", number)
+	EnsureDirAll(path)
+	return path
 }
 
 func MarkerNDirName(number int) string {
-	return fmt.Sprintf("marker%d", number)
+	path := fmt.Sprintf("marker%d", number)
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorNDecoration(number int) string {
-	return fmt.Sprintf("-mo%d", number)
+	path := fmt.Sprintf("-mo%d", number)
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorNDirName(number int) string {
-	return fmt.Sprintf("moderator%d", number)
+	path := fmt.Sprintf("moderator%d", number)
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerNDecoration(number int) string {
-	return fmt.Sprintf("-c%d", number)
+	path := fmt.Sprintf("-c%d", number)
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerNDirName(number int) string {
-	return fmt.Sprintf("checker%d", number)
+	path := fmt.Sprintf("checker%d", number)
+	EnsureDirAll(path)
+	return path
 }
 
 func MarkerReady(exam, marker string) string {
-	return filepath.Join(Exam(), exam, markerReady, marker)
+	path := filepath.Join(Exam(), exam, markerReady, limit(marker, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func MarkerSent(exam, marker string) string {
-	return filepath.Join(Exam(), exam, markerSent, marker)
+	path := filepath.Join(Exam(), exam, markerSent, limit(marker, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func MarkerBack(exam, marker string) string {
-	return filepath.Join(Exam(), exam, markerBack, marker)
+	path := filepath.Join(Exam(), exam, markerBack, limit(marker, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorReady(exam, moderator string) string {
-	return filepath.Join(Exam(), exam, moderatorReady, moderator)
+	path := filepath.Join(Exam(), exam, moderatorReady, limit(moderator, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorSent(exam, moderator string) string {
-	return filepath.Join(Exam(), exam, moderatorSent, moderator)
+	path := filepath.Join(Exam(), exam, moderatorSent, limit(moderator, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func ModeratorBack(exam, moderator string) string {
-	return filepath.Join(Exam(), exam, moderatorBack, moderator)
+	path := filepath.Join(Exam(), exam, moderatorBack, limit(moderator, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerReady(exam, checker string) string {
-	return filepath.Join(Exam(), exam, checkerReady, checker)
+	path := filepath.Join(Exam(), exam, checkerReady, limit(checker, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerSent(exam, checker string) string {
-	return filepath.Join(Exam(), exam, checkerSent, checker)
+	path := filepath.Join(Exam(), exam, checkerSent, limit(checker, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func CheckerBack(exam, checker string) string {
-	return filepath.Join(Exam(), exam, checkerBack, checker)
+	path := filepath.Join(Exam(), exam, checkerBack, limit(checker, N))
+	EnsureDirAll(path)
+	return path
 }
 
 func FlattenLayoutSVG() string {
